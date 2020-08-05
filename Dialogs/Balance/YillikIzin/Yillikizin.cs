@@ -5,6 +5,7 @@ using demo7dialogs.Dialogs;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
+using AdaptiveCards;
 
 namespace YoYoBot.Dialogs.Balance.YillikIzin
 {
@@ -42,7 +43,8 @@ namespace YoYoBot.Dialogs.Balance.YillikIzin
                 return await stepContext.PromptAsync("textPrompt",
                     new PromptOptions
                     {
-                        Prompt = stepContext.Context.Activity.CreateReply($"Peki {worker.UserName} Soyadınız nedir?")
+                        Prompt = stepContext.Context.Activity.CreateReply($"Peki {worker.UserName}" +
+                                                                          $"{Environment.NewLine}Soyadınız nedir?")
                     });
             });
             //Soyad Alındı
@@ -59,7 +61,7 @@ namespace YoYoBot.Dialogs.Balance.YillikIzin
                     new PromptOptions
                     {
                         Prompt = stepContext.Context.Activity.CreateReply($"Tamamdır Sayın {worker.UserName} {worker.RequestArg1}" +
-                                                                          $"İzine ne zaman çıkıyorsunuz?")
+                                                                          $"{Environment.NewLine}İzine ne zaman çıkıyorsunuz?")
                     });
             });
             //İzin başlangıç tarihi alındı
@@ -96,9 +98,9 @@ namespace YoYoBot.Dialogs.Balance.YillikIzin
                     {
                         Prompt = stepContext.Context.Activity.CreateReply($"Peki Sayın {worker.UserName} {worker.RequestArg1} " +
                                                                           $"{Environment.NewLine} {worker.RequestArg2}" +
-                                                                          $" tarihinde izine çıkıp {worker.RequestArg3}" +
-                                                                          $" tarihinde işe geri döneceksiniz.{Environment.NewLine}" +
-                                                                          $"Son bir bilgi kaldı.. Bana Sigorta sicil numaranı da " +
+                                                                          $"-{worker.RequestArg3} tarihleri arasında izinli olacaksınız" +
+                                                                          $"{Environment.NewLine}Son bir bilgi kaldı.. " +
+                                                                          $"{Environment.NewLine}Bana Sigorta sicil numaranı da " +
                                                                           $"verebilir misin?")
                     });
             });
@@ -118,7 +120,7 @@ namespace YoYoBot.Dialogs.Balance.YillikIzin
                         Prompt = stepContext.Context.Activity.CreateReply($"Son kez kontrol edelim{Environment.NewLine}" +
                                                                           $"Sayın {worker.UserName} {worker.RequestArg1}{Environment.NewLine}" +
                                                                           $"{worker.RequestArg2}-{worker.RequestArg3} tarihleri " +
-                                                                          $"arasında izinle olacaksınız{Environment.NewLine}" +
+                                                                          $"arasında izinli olacaksınız{Environment.NewLine}" +
                                                                           $"Ve sigorta sicil numaranız da {worker.RequestArg4}{Environment.NewLine}" +
                                                                           $"Doğru mu?"),
                         Choices = new[] { new Choice { Value = "Evet" }, new Choice { Value = "Hayır" },}.ToList()
@@ -129,6 +131,7 @@ namespace YoYoBot.Dialogs.Balance.YillikIzin
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var response = stepContext.Result as FoundChoice;
+                               
                 if (response.Value == "Evet")
                 {
                     //Api result kontrol edilecek
